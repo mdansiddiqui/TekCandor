@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSWorkOrderDailyProress" targetNamespace="http://tempuri.org/DSWorkOrderDailyProress.xsd" xmlns:mstns="http://tempuri.org/DSWorkOrderDailyProress.xsd" xmlns="http://tempuri.org/DSWorkOrderDailyProress.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSWorkOrderDailyProress" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DSWorkOrderDailyProress" msprop:Generator_UserDSName="DSWorkOrderDailyProress">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="WorkOrderDailyProgress" msprop:Generator_TableClassName="WorkOrderDailyProgressDataTable" msprop:Generator_TableVarName="tableWorkOrderDailyProgress" msprop:Generator_TablePropName="WorkOrderDailyProgress" msprop:Generator_RowDeletingName="WorkOrderDailyProgressRowDeleting" msprop:Generator_RowChangingName="WorkOrderDailyProgressRowChanging" msprop:Generator_RowEvHandlerName="WorkOrderDailyProgressRowChangeEventHandler" msprop:Generator_RowDeletedName="WorkOrderDailyProgressRowDeleted" msprop:Generator_UserTableName="WorkOrderDailyProgress" msprop:Generator_RowChangedName="WorkOrderDailyProgressRowChanged" msprop:Generator_RowEvArgName="WorkOrderDailyProgressRowChangeEvent" msprop:Generator_RowClassName="WorkOrderDailyProgressRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="S_no" msprop:Generator_ColumnVarNameInTable="columnS_no" msprop:Generator_ColumnPropNameInRow="S_no" msprop:Generator_ColumnPropNameInTable="S_noColumn" msprop:Generator_UserColumnName="S_no" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn" msprop:Generator_UserColumnName="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="Time" msprop:Generator_ColumnVarNameInTable="columnTime" msprop:Generator_ColumnPropNameInRow="Time" msprop:Generator_ColumnPropNameInTable="TimeColumn" msprop:Generator_UserColumnName="Time" type="xs:string" minOccurs="0" />
+              <xs:element name="Assigned_To" msprop:Generator_ColumnVarNameInTable="columnAssigned_To" msprop:Generator_ColumnPropNameInRow="Assigned_To" msprop:Generator_ColumnPropNameInTable="Assigned_ToColumn" msprop:Generator_UserColumnName="Assigned_To" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:string" minOccurs="0" />
+              <xs:element name="Service" msprop:Generator_ColumnVarNameInTable="columnService" msprop:Generator_ColumnPropNameInRow="Service" msprop:Generator_ColumnPropNameInTable="ServiceColumn" msprop:Generator_UserColumnName="Service" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

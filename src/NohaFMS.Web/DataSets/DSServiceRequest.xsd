@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSServiceRequest" targetNamespace="http://tempuri.org/DSServiceRequest.xsd" xmlns:mstns="http://tempuri.org/DSServiceRequest.xsd" xmlns="http://tempuri.org/DSServiceRequest.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSServiceRequest" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DSServiceRequest" msprop:Generator_UserDSName="DSServiceRequest">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Service_x0020_Request" msprop:Generator_TableClassName="Service_RequestDataTable" msprop:Generator_TableVarName="tableService_Request" msprop:Generator_RowChangedName="Service_RequestRowChanged" msprop:Generator_TablePropName="Service_Request" msprop:Generator_RowDeletingName="Service_RequestRowDeleting" msprop:Generator_RowChangingName="Service_RequestRowChanging" msprop:Generator_RowEvHandlerName="Service_RequestRowChangeEventHandler" msprop:Generator_RowDeletedName="Service_RequestRowDeleted" msprop:Generator_RowClassName="Service_RequestRow" msprop:Generator_UserTableName="Service Request" msprop:Generator_RowEvArgName="Service_RequestRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ReqNO" msprop:Generator_ColumnVarNameInTable="columnReqNO" msprop:Generator_ColumnPropNameInRow="ReqNO" msprop:Generator_ColumnPropNameInTable="ReqNOColumn" msprop:Generator_UserColumnName="ReqNO" type="xs:string" minOccurs="0" />
+              <xs:element name="Priority" msprop:Generator_ColumnVarNameInTable="columnPriority" msprop:Generator_ColumnPropNameInRow="Priority" msprop:Generator_ColumnPropNameInTable="PriorityColumn" msprop:Generator_UserColumnName="Priority" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn" msprop:Generator_UserColumnName="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="ReqName" msprop:Generator_ColumnVarNameInTable="columnReqName" msprop:Generator_ColumnPropNameInRow="ReqName" msprop:Generator_ColumnPropNameInTable="ReqNameColumn" msprop:Generator_UserColumnName="ReqName" type="xs:string" minOccurs="0" />
+              <xs:element name="ReqType" msprop:Generator_ColumnVarNameInTable="columnReqType" msprop:Generator_ColumnPropNameInRow="ReqType" msprop:Generator_ColumnPropNameInTable="ReqTypeColumn" msprop:Generator_UserColumnName="ReqType" type="xs:string" minOccurs="0" />
+              <xs:element name="ReqDateTime" msprop:Generator_ColumnVarNameInTable="columnReqDateTime" msprop:Generator_ColumnPropNameInRow="ReqDateTime" msprop:Generator_ColumnPropNameInTable="ReqDateTimeColumn" msprop:Generator_UserColumnName="ReqDateTime" type="xs:string" minOccurs="0" />
+              <xs:element name="AssignedTo" msprop:Generator_ColumnVarNameInTable="columnAssignedTo" msprop:Generator_ColumnPropNameInRow="AssignedTo" msprop:Generator_ColumnPropNameInTable="AssignedToColumn" msprop:Generator_UserColumnName="AssignedTo" type="xs:string" minOccurs="0" />
+              <xs:element name="CompDateTime" msprop:Generator_ColumnVarNameInTable="columnCompDateTime" msprop:Generator_ColumnPropNameInRow="CompDateTime" msprop:Generator_ColumnPropNameInTable="CompDateTimeColumn" msprop:Generator_UserColumnName="CompDateTime" type="xs:string" minOccurs="0" />
+              <xs:element name="ReqId" msprop:Generator_ColumnVarNameInTable="columnReqId" msprop:Generator_ColumnPropNameInRow="ReqId" msprop:Generator_ColumnPropNameInTable="ReqIdColumn" msprop:Generator_UserColumnName="ReqId" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

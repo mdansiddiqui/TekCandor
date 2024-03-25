@@ -1,0 +1,1054 @@
+﻿
+@model ChequeDepositModel
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.IsNew)
+
+@functions
+{ string primarySystemCurrencySymbol = EngineContext.Current.Resolve<NohaFMS.Core.IWorkContext>().WorkingCurrency.CurrencySymbol; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+    .flip-box {
+        background-color: transparent;
+        width: 300px;
+        height: 200px;
+        border: 1px solid #f1f1f1;
+        perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    }
+
+    /* This container is needed to position the front and back side */
+    .flip-box-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    /* Do an horizontal flip when you move the mouse over the flip box container */
+    .flip-box:hover .flip-box-inner {
+        transform: rotateY(180deg);
+    }
+
+    /* Position the front and back side */
+    .flip-box-front, .flip-box-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+    }
+
+    /* Style the front side (fallback if image is missing) */
+    .flip-box-front {
+        background-color: #bbb;
+        color: black;
+    }
+
+    /* Style the back side */
+    .flip-box-back {
+        background-color: dodgerblue;
+        color: white;
+        transform: rotateY(180deg);
+    }
+
+</style>
+<script>
+
+
+    $(document).ready(function () {
+        bindBootstrapTabSelectEvent('Chequedeposit-edit');
+        if ($('#IsNew').val() == 'True') {
+            toggleTabs(false);
+        } else {
+            toggleTabs(true);
+        }
+
+
+    });
+
+    function toggleTabs(show) {
+        if (show) {
+            $('#tab-attachments-header').show();
+            $('#tab-entityAttributes-header').show();
+        } else {
+            $('#tab-attachments-header').hide();
+            $('#tab-entityAttributes-header').hide();
+        }
+    }
+    $(document).ready(function () {
+            $("#save").click(function (e) {
+                e.preventDefault();
+                saveForm('ChequeDeposit-form', '@(Url.Action("Edit", "ChequeDeposit"))', toggleTabs);
+            });
+            $("#post").click(function (e) {
+                e.preventDefault();
+                saveForm('ChequeDeposit-form', '@(Url.Action("Post", "ChequeDeposit"))', toggleTabs);
+            });
+
+            $("#cancel").click(function (e) {
+                e.preventDefault();
+                $('#form').removeClass('dirty');
+                BaseEam.Grid.deleteRow(null, @Model.Id, "@Url.Action("Cancel", "ChequeDeposit")", "",  "@Url.Action("List", "ChequeDeposit")", false);
+            });
+
+            $("#ChequeDeposit-delete").click(function (e) {
+                e.preventDefault();
+                BaseEam.Grid.deleteRow(null, @Model.Id, "@Url.Action("Delete", "ChequeDeposit")", "", "@Url.Action("List", "ChequeDeposit")", true);
+            });
+        });
+</script>
+
+<br/>
+<div class="content "style="margin-top:10px" >
+    <div class="form-horizontal">
+        <div id="chequeDeposit-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("ChequeClearing.EditItemDetails"), true)
+                @*@Html.RenderBootstrapTabHeader("tab-entityAttributes", @T("Common.EntityAttributes"))
+                    @Html.RenderBootstrapTabHeader("tab-attachments", @T("Common.Attachments"))*@
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @*@Html.RenderBootstrapTabContent("tab-attachments", @TabAttachments())
+                    @Html.RenderBootstrapTabContent("tab-entityAttributes", @TabEntityAttributes())*@
+            </div>
+        </div>
+    </div>
+</div>
+
+@{ //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "chequeDeposit-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock } }
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+       
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.Date)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.Date)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.ChequeNumber)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.ChequeNumber)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.Amount)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.Amount, postfix: primarySystemCurrencySymbol)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.Exported)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.Exported)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                <div class="col-md-4 pull-left">
+                                    @Html.BaseEamLabelFor(model => model.status)
+                                </div>
+                                
+                                <div class="col-md-8">
+                                    @Html.BaseEamComboBoxFor(model => model.status, "GetChoices", "Common",
+                                         new RouteValueDictionary { { "dbTable", "ClearingStatuses" },
+                                             { "dbTextColumn", "Text" }, { "dbValueColumn", "Value" } }, true)
+                                </div>
+                          </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.chequeDate)
+                            </div>
+                            <div class="col-md-8">
+                                <div class="input-group date">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </span>
+                                    @*<input id="chequeDate" class="form-control customfeild" name="chequeDate">*@
+
+                                    @Html.TextBoxFor(model => model.chequeDate, new { @class = "form-control", @id = "chequeDate" })
+                                    @Html.ValidationMessageFor(model => model.chequeDate)
+                                </div>
+
+
+                            </div>
+                        </div>
+                        
+
+
+                        @*<div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.chequeDate)
+            </div>
+            <div class="col-md-8">
+                <div class="col-md-9">
+                    @Html.BaseEamEditorFor(model => model.chequeDate, dataBind: "dateTimeEnabled: !isApproved()" id= "chequeDate"})
+                </div>
+            </div>
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.TextBoxFor(model => model.chequeDate)
+            </div>
+            <div class="col-md-8">
+                @Html.ValidationMessageFor(model => model.chequeDate)
+            </div>
+        </div>*@
+                        @*<div class="form-group" style="margin-top:-10px">
+            <div id="tblForm" border="0" cellpadding="5" cellspacing="0">
+
+                <label class="col-sm-3 control-label forlable" style="text-align:left">Expiry Date</label>
+                <input type="text" class="date-format" placeholder="dd/mm/yy" id="newExpiry_date" />
+
+
+            </div>
+        </div>*@
+                        @* <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.Error)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamCheckBoxFor(model => model.Error)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.ReceiverBankCode)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.ReceiverBankCode)
+            </div>
+        </div>*@
+
+                        @*<div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.CityCode)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.CityCode)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.Piggyback)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.Piggyback)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.BelowMinimumCompressedImageSize)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.BelowMinimumCompressedImageSize)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.FoldedorTornDocumentCorners)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.FoldedorTornDocumentCorners)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.OversizeImage)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.OversizeImage)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.CarbonStrip)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.CarbonStrip)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.UV)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.UV)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.InstrumentDuplicate)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.InstrumentDuplicate)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.TotalChequesReturnCount)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.TotalChequesReturnCount)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 pull-left">
+                @Html.BaseEamLabelFor(model => model.FraudChequeHistory)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.FraudChequeHistory)
+            </div>
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.Returnreasone)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamComboBoxFor(model => model.Returnreasone, "Returnreasone", "Common",
+                            new RouteValueDictionary { { "dbTable", "ChequeDepositInformation" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+            </div>
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.AccountNumber, required: true)
+            </div>
+            <div class="col-md-9">
+                @Html.EnumDropDownListFor(model => model.AccountNumber, new { @class = "form-control" })
+            </div>
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.Description)
+            </div>
+            <div class="col-md-9">
+                @Html.BaseEamEditorFor(model => model.Description)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.Barcode)
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    @Html.BaseEamEditorFor(model => model.Barcode)
+                    <span class="input-group-btn">
+                        <button type="button" id="printBarcode" class="btn btn-primary btn-master" title="@T("Common.Print")">
+                            <i class="fa fa-print"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.UnitPrice)
+            </div>
+            <div class="col-md-9">
+                @Html.BaseEamEditorFor(model => model.UnitPrice, postfix: primarySystemCurrencySymbol)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.PictureId)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => Model.PictureId, "Picture", new { entityId = Model.Id, entityType = EntityType.Item })
+            </div>
+        </div>*@
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.SenderBankCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.SenderBankCode)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.AccountNumber)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.AccountNumber)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.HubCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.HubCode)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.Errors)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.Errors)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.Returnreasone)
+                            </div>
+                            <div class="col-md-8">
+                                @*@Html.BaseEamComboBoxFor(model => model.Returnreasone, "GetChoices", "Common",
+        new RouteValueDictionary { { "dbTable", "ReturnReason" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)*@
+                                @Html.BaseEamComboBoxFor(model => model.Returnreasone, "GetChoices", "Common",
+                                         new RouteValueDictionary { { "dbTable", "ReturnReason" },
+                                             { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+
+
+
+
+
+
+                                @*@Html.DropDownListFor(model => model.Returnreasone, "Returnreasone", "Common",
+                new RouteValueDictionary { { "dbTable", "ChequeDepositInformation" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } })*@
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.Remarks)
+                            </div>
+                            <div class="col-md-8">
+
+                                @Html.BaseEamTextAreaFor(model => model.Remarks, htmlAttributes: new { @style = "height:90px" })
+                            </div>
+
+                        </div>
+
+                        @*<div class="form-group">
+
+                <div class="col-sm-4">
+                    @Html.BaseEamLabelFor(model => model.Returnreasone)
+                </div>
+                <div class="col-sm-8">
+                    @Html.BaseEamComboBoxFor(model => model.Returnreasone, "Returnreasone", "Common",
+                                new RouteValueDictionary { { "dbTable", "ChequeDepositInformation" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+
+            </div>
+
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.CycleCode)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.CycleCode)
+            </div>
+        </div>*@
+
+                        @*<div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.ReceiverBranchCode)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.ReceiverBranchCode)
+            </div>
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.SequenceNumber)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.SequenceNumber)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.IQATag)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.IQATag)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.ImageToolight)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.ImageToolight)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.AboveMaximumCompressedImageSize)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.AboveMaximumCompressedImageSize)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.FoldedOrTornDocumentEdges)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.FoldedOrTornDocumentEdges)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.ImageTooDark)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.ImageTooDark)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.OutOfFocus)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.OutOfFocus)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.MICRPresent)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.MICRPresent)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.AverageChequeAmount)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.AverageChequeAmount, postfix: primarySystemCurrencySymbol)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.CaptureAtNIFT_Branch)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.CaptureAtNIFT_Branch)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.BaseEamLabelFor(model => model.Filler)
+            </div>
+            <div class="col-md-8">
+                @Html.BaseEamEditorFor(model => model.Filler)
+            </div>
+        </div>*@
+                        @*<div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.ManufacturerId)
+            </div>
+            <div class="col-md-9">
+                @Html.BaseEamComboBoxFor(model => model.ManufacturerId, "GetChoices", "Common",
+                            new RouteValueDictionary { { "dbTable", "Company" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.UnitOfMeasureId, required: true)
+            </div>
+            <div class="col-md-9">
+                @Html.BaseEamComboBoxFor(model => model.UnitOfMeasureId, "GetChoices", "Common",
+                            new RouteValueDictionary { { "dbTable", "UnitOfMeasure" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.BaseEamLabelFor(model => model.ItemStatusId, required: true)
+            </div>
+            <div class="col-md-9">
+                @Html.BaseEamComboBoxFor(model => model.ItemStatusId, "ValueItems", "Common",
+                            new RouteValueDictionary { { "additionalField", "category" }, { "additionalValue", "Item Status" } }, true)
+            </div>
+        </div>*@
+                    </div>
+
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.ReceiverBranchCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.ReceiverBranchCode)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.TransactionCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.TransactionCode)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.CaptureAtNIFT_Branch)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.BaseEamEditorFor(model => model.CaptureAtNIFT_Branch)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 pull-left">
+                                @Html.BaseEamLabelFor(model => model.ErrorFieldsName)
+                            </div>
+                            <div class="col-md-8">
+
+                                @Html.BaseEamTextAreaFor(model => model.ErrorFieldsName, htmlAttributes: new { @style = "height:90px" })
+                            </div>
+
+                        </div>
+                        @*<div class="form-group">
+                    <div class="col-md-4 pull-left">
+                        @Html.BaseEamLabelFor(model => model.HubCode)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.HubCode)
+                    </div>
+                </div>*@
+
+                        @*<div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.SenderBranchCode)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.SenderBranchCode)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 pull-left">
+                        @Html.BaseEamLabelFor(model => model.serialNo)
+                    </div>
+                    <div class="col-md-8 readonly">
+                        @Html.BaseEamEditorFor(model => model.serialNo)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.DocumentSkew)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.DocumentSkew)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.HorizontalStreaks)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.HorizontalStreaks)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.UndersizeImage)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.UndersizeImage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.FramingError)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.FramingError)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.FrontRearDimensionMismatch)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.FrontRearDimensionMismatch)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.QRCodeMatch)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.QRCodeMatch)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.StandardCheque)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.StandardCheque)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.TotalChequesCount)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.TotalChequesCount)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.DeferredCheque)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamEditorFor(model => model.DeferredCheque)
+                    </div>
+                </div>*@
+                        @*<div class="form-group">
+                    <div class="col-md-4">
+                        @Html.BaseEamLabelFor(model => model.status)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.BaseEamComboBoxFor(model => model.status, "Recordvalidationindicator", "Common",
+                                    new RouteValueDictionary { { "dbTable", "ChequeDepositInformation" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+                    </div>
+                </div>*@
+                        @*<div class="form-group">
+                    <div class="col-md-3">
+                        @Html.BaseEamLabelFor(model => model.ManufacturerId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.BaseEamComboBoxFor(model => model.ManufacturerId, "GetChoices", "Common",
+                                    new RouteValueDictionary { { "dbTable", "Company" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.BaseEamLabelFor(model => model.UnitOfMeasureId, required: true)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.BaseEamComboBoxFor(model => model.UnitOfMeasureId, "GetChoices", "Common",
+                                    new RouteValueDictionary { { "dbTable", "UnitOfMeasure" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.BaseEamLabelFor(model => model.ItemStatusId, required: true)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.BaseEamComboBoxFor(model => model.ItemStatusId, "ValueItems", "Common",
+                                    new RouteValueDictionary { { "additionalField", "category" }, { "additionalValue", "Item Status" } }, true)
+                    </div>
+                </div>*@
+                    </div>
+
+                    @*<div class="form-group">
+
+
+
+                <div class="col-md-8">
+                    <div class="col-md-2">
+                        @Html.BaseEamLabelFor(model => model.Returnreasone)
+                    </div>
+                    <div class="col-md-6">
+                        @Html.BaseEamComboBoxFor(model => model.Returnreasone, "Returnreasone", "Common",
+                                    new RouteValueDictionary { { "dbTable", "ChequeDepositInformation" }, { "dbTextColumn", "Name" }, { "dbValueColumn", "Id" } }, true)
+                    </div>
+
+                </div>
+
+            </div>*@
+                    @*<div class="form-group">
+                <div class="col-sm-8">
+                    <div class="col-sm-2 ">
+                        @Html.BaseEamLabelFor(model => model.ErrorFieldsName)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.BaseEamTextAreaFor(model => model.ErrorFieldsName, htmlAttributes: new { @style = "height:75px" })
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
+            </div>
+            <button type="button"
+                    onclick="document.getElementById('demo').innerHTML = Date()">
+                Click me to display Date and Time.
+            </button>*@
+
+                </div>
+
+                @*<hr />
+        @Html.Partial("Attribute", new ViewDataDictionary { { "entityId", Model.Id }, { "entityType", EntityType.ChequeDepositInformation } })
+        <hr />
+        @if (Model.Id > 0 && Model.IsNew == false)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.BaseEamLabelFor(model => model.FirstCreatedBy)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.BaseEamDisplayFor(model => model.FirstCreatedBy)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class=" bg-blue pull-left" style="margin-left:20px" value="Zoom Images" onclick="window.open('@Url.Action("zoomImage", "ChequeDeposit", new {id= Model.Id })')"> <i class="fa fa-search"></i> Zoom Images</button>
+
+                            @Html.BaseEamLabelFor(model => model.LastUpdatedBy)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.BaseEamDisplayFor(model => model.LastUpdatedBy)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }*@
+                @*</div>
+
+        <div class="panel-body">*@
+                <div class="row">
+                    <div class="col-sm-12">
+
+
+                        <div class="col-sm-6">
+
+                            <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Front Image</h5>
+                            
+                                <button type="button" class=" bg-blue pull-right" value="Zoom Images" onclick="window.open('@Url.Action("zoomImage", "ChequeDeposit", new {id= Model.Id })')"> <i class="fa fa-search"></i> Zoom Images</button>
+                        
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Signature Image</h5>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-md-12">
+
+                            <div class="col-md-6">
+                                @*<div class="col-md-12">
+
+                            <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Front Image</h5>
+
+                        </div>*@
+                                <div class="flip-box" style="margin-left:15px; width:98%; height:300px">
+                                    <div class="flip-box-inner" style="width:100%; height:300px">
+                                        <div class="flip-box-front" style="width:100%; height:300px">
+
+                                            @if (Model.imgF != null)
+                                            {
+
+                                                // var base64 = Convert.ToBase64String(Model.imgF);
+                                                // var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                                var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgF);
+
+                                                <img id="image" alt="Paris" src="@imgSrc" style="width:100%; height:300px;border:5px solid" />}
+
+                                        </div>
+                                        <div class="flip-box-back">
+
+                                            @if (Model.imgR != null)
+                                            {
+
+                                                // var base64 = Convert.ToBase64String(Model.imgR);F
+                                                // var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                                var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgR);
+
+                                                <img alt="Paris" src="@imgSrc" style="width:98%; height:300px;border:5px solid" />}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                @*<div class="col-md-12">
+
+
+            <h5 class="pull-left text-bold k-underline" style="margin-left:20px">UV Image</h5>
+
+        </div>*@
+
+
+                                <img class="img-container" style="width:100%; height:300px;border:5px solid" src="@Url.Content("~/Content/images/sample-signature-card.jpg")" />
+
+                                @*@if (Model.imgU != null)
+                                {
+
+                                    //var base64 = Convert.ToBase64String(Model.imgU);
+                                    //var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                    var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgU);
+
+                                    <img alt="image" class="img-container" src="@imgSrc" style="width:100%; height:300px;border:5px solid" />}*@
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="col-sm-12">
+
+
+                                <div class="col-sm-6">
+                                    <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Ultraviolet Image</h5>
+
+                                </div>
+
+                                <div class="col-sm-6">
+
+                                  
+
+                                </div>
+                            </div>
+                          
+
+                            <div class="col-sm-6">
+
+                             
+                                     @*<div class="col-md-12">
+            <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Ultraviolet Image</h5>
+        </div>*@
+                                    <div style="margin-left:15px; width:98%; height:300px">
+                                        <div>
+                                            <div>
+
+                                                @*<img class="img-container" style="width:100%; height:300px;border:5px solid" src="@Url.Content("~/Content/images/sample-signature-card.jpg")" />*@
+
+                                                @if (Model.imgU != null)
+                                                {
+
+                                                    //var base64 = Convert.ToBase64String(Model.imgU);
+                                                    //var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                                    var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgU);
+
+                                                    <img alt="image" class="img-container" src="@imgSrc" style="width:100%; height:300px;border:5px solid" />}
+                                            </div>
+                                        </div>
+                                   
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="col-md-12 ">
+                                            <div class="form-group">
+                                                <div class="col-md-4 pull-left">
+                                                    @Html.BaseEamLabelFor(model => model.AcccountTitle)
+                                                </div>
+                                                <div class="col-md-8">
+                                                    @Html.BaseEamEditorFor(model => model.AcccountTitle)
+                                                </div>
+                                            </div>
+                                            @*<div class="form-group">
+                                                <div class="col-md-4 pull-left">
+                                                    @Html.BaseEamLabelFor(model => model.AccountNumber)
+                                                </div>
+                                                <div class="col-md-8">
+                                                    @Html.BaseEamEditorFor(model => model.AccountNumber)
+                                                </div>
+                                            </div>*@
+                                            <div class="form-group">
+                                                <div class="col-md-4 pull-left">
+                                                    @Html.BaseEamLabelFor(model => model.AvailableBalance)
+                                                </div>
+                                                <div class="col-md-8">
+                                                    @Html.BaseEamEditorFor(model => model.AvailableBalance)
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-4 pull-left">
+                                                    @Html.BaseEamLabelFor(model => model.LedgerBalance)
+                                                </div>
+                                                <div class="col-md-8">
+                                                    @Html.BaseEamEditorFor(model => model.LedgerBalance)
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="row" >
+                                            <div class="col-sm-12" style="margin-top:15px">
+
+
+                                                
+
+
+                                                @if (Model.status == "C")
+                                                {
+                                                    <button type="button" class="btn bg-green pull-right" style="margin-right:20px" onclick="location.href='@Url.Action("CallBacksave", "ChequeDeposit",Model)'">  <i class="fa fa-external-link" aria-hidden="true"></i> Call Back Approval</button>
+                                                }
+                                                else
+                                                {
+                                                    <a id="save" class="btn bg-green pull-right" style="margin-right:20px">
+                                                        Proceed
+                                                        <i class="fa fa-save"></i>
+                                                    </a>
+                                                }
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+
+
+
+                </div>
+                <br />
+                <br />
+              
+
+                </div>
+
+           
+        </div>
+    </div>
+}
+
+@helper TabEntityAttributes()
+{
+    @Html.Partial("EntityAttribute", new EntityAttributeModel { EntityId = Model.Id, EntityType = EntityType.ChequeDepositInformation })
+}
+
+
+@helper TabAttachments()
+{
+    @Html.Partial("Attachment", new AttachmentModel { EntityId = Model.Id, EntityType = EntityType.ChequeDepositInformation })
+}
+

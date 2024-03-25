@@ -1,0 +1,1 @@
+ALTER Table [TEKCONTROLLER].[dbo].[ChequeDepositInformation] add chequeDate DateTime;

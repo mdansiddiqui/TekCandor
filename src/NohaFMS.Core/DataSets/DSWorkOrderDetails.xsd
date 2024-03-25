@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSWorkOrderDetails" targetNamespace="http://tempuri.org/DSWorkOrderDetails.xsd" xmlns:mstns="http://tempuri.org/DSWorkOrderDetails.xsd" xmlns="http://tempuri.org/DSWorkOrderDetails.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSWorkOrderDetails" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DSWorkOrderDetails" msprop:Generator_UserDSName="DSWorkOrderDetails">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="WorkOrder" msprop:Generator_TableClassName="WorkOrderDataTable" msprop:Generator_TableVarName="tableWorkOrder" msprop:Generator_RowChangedName="WorkOrderRowChanged" msprop:Generator_TablePropName="WorkOrder" msprop:Generator_RowDeletingName="WorkOrderRowDeleting" msprop:Generator_RowChangingName="WorkOrderRowChanging" msprop:Generator_RowEvHandlerName="WorkOrderRowChangeEventHandler" msprop:Generator_RowDeletedName="WorkOrderRowDeleted" msprop:Generator_RowClassName="WorkOrderRow" msprop:Generator_UserTableName="WorkOrder" msprop:Generator_RowEvArgName="WorkOrderRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msprop:Generator_ColumnVarNameInTable="columnId" msprop:Generator_ColumnPropNameInRow="Id" msprop:Generator_ColumnPropNameInTable="IdColumn" msprop:Generator_UserColumnName="Id" type="xs:long" />
+              <xs:element name="Requestor" msprop:Generator_ColumnVarNameInTable="columnRequestor" msprop:Generator_ColumnPropNameInRow="Requestor" msprop:Generator_ColumnPropNameInTable="RequestorColumn" msprop:Generator_UserColumnName="Requestor" type="xs:string" minOccurs="0" />
+              <xs:element name="Location" msprop:Generator_ColumnVarNameInTable="columnLocation" msprop:Generator_ColumnPropNameInRow="Location" msprop:Generator_ColumnPropNameInTable="LocationColumn" msprop:Generator_UserColumnName="Location" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn" msprop:Generator_UserColumnName="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="Requested_Date_Time" msprop:Generator_ColumnVarNameInTable="columnRequested_Date_Time" msprop:Generator_ColumnPropNameInRow="Requested_Date_Time" msprop:Generator_ColumnPropNameInTable="Requested_Date_TimeColumn" msprop:Generator_UserColumnName="Requested_Date_Time" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Scheduled" msprop:Generator_ColumnVarNameInTable="columnScheduled" msprop:Generator_ColumnPropNameInRow="Scheduled" msprop:Generator_ColumnPropNameInTable="ScheduledColumn" msprop:Generator_UserColumnName="Scheduled" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Assigned_To" msprop:Generator_ColumnVarNameInTable="columnAssigned_To" msprop:Generator_ColumnPropNameInRow="Assigned_To" msprop:Generator_ColumnPropNameInTable="Assigned_ToColumn" msprop:Generator_UserColumnName="Assigned_To" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:string" minOccurs="0" />
+              <xs:element name="Priority_Level" msprop:Generator_ColumnVarNameInTable="columnPriority_Level" msprop:Generator_ColumnPropNameInRow="Priority_Level" msprop:Generator_ColumnPropNameInTable="Priority_LevelColumn" msprop:Generator_UserColumnName="Priority_Level" type="xs:string" minOccurs="0" />
+              <xs:element name="Overdue" msprop:Generator_ColumnVarNameInTable="columnOverdue" msprop:Generator_ColumnPropNameInRow="Overdue" msprop:Generator_ColumnPropNameInTable="OverdueColumn" msprop:Generator_UserColumnName="Overdue" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Duration" msprop:Generator_ColumnVarNameInTable="columnDuration" msprop:Generator_ColumnPropNameInRow="Duration" msprop:Generator_ColumnPropNameInTable="DurationColumn" msprop:Generator_UserColumnName="Duration" type="xs:string" minOccurs="0" />
+              <xs:element name="Start_Time" msprop:Generator_ColumnVarNameInTable="columnStart_Time" msprop:Generator_ColumnPropNameInRow="Start_Time" msprop:Generator_ColumnPropNameInTable="Start_TimeColumn" msprop:Generator_UserColumnName="Start_Time" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="End_Time" msprop:Generator_ColumnVarNameInTable="columnEnd_Time" msprop:Generator_ColumnPropNameInRow="End_Time" msprop:Generator_ColumnPropNameInTable="End_TimeColumn" msprop:Generator_UserColumnName="End_Time" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Comments" msprop:Generator_ColumnVarNameInTable="columnComments" msprop:Generator_ColumnPropNameInRow="Comments" msprop:Generator_ColumnPropNameInTable="CommentsColumn" msprop:Generator_UserColumnName="Comments" type="xs:string" minOccurs="0" />
+              <xs:element name="RequesterEmail" msprop:Generator_ColumnVarNameInTable="columnRequesterEmail" msprop:Generator_ColumnPropNameInRow="RequesterEmail" msprop:Generator_ColumnPropNameInTable="RequesterEmailColumn" msprop:Generator_UserColumnName="RequesterEmail" type="xs:string" minOccurs="0" />
+              <xs:element name="RequestorContact" msprop:Generator_ColumnVarNameInTable="columnRequestorContact" msprop:Generator_ColumnPropNameInRow="RequestorContact" msprop:Generator_ColumnPropNameInTable="RequestorContactColumn" msprop:Generator_UserColumnName="RequestorContact" type="xs:string" minOccurs="0" />
+              <xs:element name="Task_Sequence" msprop:Generator_ColumnVarNameInTable="columnTask_Sequence" msprop:Generator_ColumnPropNameInRow="Task_Sequence" msprop:Generator_ColumnPropNameInTable="Task_SequenceColumn" msprop:Generator_UserColumnName="Task_Sequence" type="xs:string" minOccurs="0" />
+              <xs:element name="Task_Description" msprop:Generator_ColumnVarNameInTable="columnTask_Description" msprop:Generator_ColumnPropNameInRow="Task_Description" msprop:Generator_ColumnPropNameInTable="Task_DescriptionColumn" msprop:Generator_UserColumnName="Task_Description" type="xs:string" minOccurs="0" />
+              <xs:element name="Approved_By" msprop:Generator_ColumnVarNameInTable="columnApproved_By" msprop:Generator_ColumnPropNameInRow="Approved_By" msprop:Generator_ColumnPropNameInTable="Approved_ByColumn" msprop:Generator_UserColumnName="Approved_By" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1">
+      <xs:selector xpath=".//mstns:WorkOrder" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,395 @@
+﻿
+@using NohaFMS.Services.Security
+@model SearchModel
+@{
+
+    @*List<NohaFMS.Core.Domain.ExchangeRate> rates = ViewBag.Rates;*@
+
+    //page title
+    ViewBag.Title = T("Monitoring.ChequeClearingTransaction").Text;
+    var defaultGridPageSize = EngineContext.Current.Resolve<NohaFMS.Core.Domain.GeneralSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<NohaFMS.Core.Domain.GeneralSettings>().GridPageSizes;
+    var primarySystemCurrencySymbol = EngineContext.Current.Resolve<NohaFMS.Core.IWorkContext>().WorkingCurrency.CurrencySymbol;
+
+    var permissionService = EngineContext.Current.Resolve<NohaFMS.Services.IPermissionService>();
+
+    var allowCreate = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Create);
+    var allowRead = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Read);
+    var allowUpdate = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Update);
+    var allowDelete = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Delete);
+    var allowImport = permissionService.Authorize(StandardPermissionName.Monitoring_Import);
+    var allowExport = permissionService.Authorize(StandardPermissionName.Monitoring_Export);
+}
+
+
+@Html.AntiForgeryToken()
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Authorizer
+    </h1>
+</div>
+<div class="validation-summary-errors none-display">
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+
+            @Html.Partial("Filter", Model)
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="ChequeDeposit-grid"></div>
+
+                    <script>
+                            $(document).ready(function () {
+                                $("#ChequeDeposit-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("Authorizer", "ChequeDeposit"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: additionalData
+                                            },
+                                            //parameterMap: function (data, operation) {
+                                            //    sortMapping = [
+                                            //        { from: "Date", to: "ChequeDepositInformation.Date" },
+                                            //        { from: "SenderBankCode", to: "ChequeDepositInformation.SenderBankCode" }
+                                            //    ];
+                                            //    BaseEam.Grid.mapSortColumns(data.sort, sortMapping);
+                                            //    return data;
+                                            //}
+                                            parameterMap: function (data, operation) {
+                                                sortMapping = [
+                                                    { from: "Date", to: "ChequeClearing.Date"},
+                                                    { from: "SenderBankCode", to: "ChequeClearing.SenderBankCode"},
+                                                    { from: "ReceiverBranchCode", to: "ChequeClearing.ReceiverBranchCode"},
+                                                    { from: "ChequeNumber", to: "ChequeClearing.ChequeNumber" },
+                                                    { from: "Error", to: "ChequeClearing.Error" }
+                                                ];
+                                                BaseEam.Grid.mapSortColumns(data.sort, sortMapping);
+                                                return data;
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                              model: {
+                                                fields: {
+                                                }
+                                                 }
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(defaultGridPageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(gridPageSizes)],
+                                        @Html.Partial("_GridPagerMessages")
+                                    },
+                                        sortable: true,
+                                        editable: false,
+                                        scrollable: false,
+                                        dataBound: gridCheckboxHandler.onDataBound,
+                                    columns: [
+
+
+                                        {
+                                            field: "Id",
+                                            headerTemplate: "<input id='ChequeDeposit-grid-mastercheckbox' type='checkbox'/>",
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                            width: 50,
+                                            sortable: false,
+                                           // selectable: true
+                                            //id='test'
+                                        },
+                                        {
+                                            field: "Date",
+                                            title: "@T("ChequeClearing.Date")",
+
+                                            //sorttype: 'date',
+                                            //formatter: 'date'
+                                            template: "#= toDate(Date) #"
+                                        },
+
+                                        {
+                                            field: "HubCode",
+                                            title: "@T("ChequeClearing.HubCode")",
+                                        },
+                                        {
+                                            field: "SenderBankCode",
+                                            title: "@T("ChequeClearing.SenderBankCode")"
+
+                                        }, {
+                                            field: "Receiver Branch",
+                                            template: "#= ReceiverBranchName + ' - ' + ReceiverBranchCode #"
+
+                                        },
+                                            {
+                                                field: "ChequeNumber",
+                                            title: "@T("ChequeClearing.ChequeNumber")"
+
+                                        }, {
+                                                field: "AccountNumber",
+                                            title: "@T("ChequeClearing.AccountNumber")"
+
+
+                                        },
+                                        {
+                                            field: "TransactionCode",
+                                            title: "@T("ChequeClearing.TransactionCode")"
+
+
+                                        },
+                                        {
+                                            field: "Amount",
+                                            title: "@T("ChequeClearing.Amount")"
+
+
+
+                                        },
+
+                                         {
+                                            field: "status",
+                                            title: "@T("ChequeClearing.status")"
+
+
+
+                                        },
+                                          {
+                                            field: "Export",
+                                            title: "@T("ChequeClearing.Export")"
+
+
+
+                                        },
+                                           {
+                                            field: "Error",
+                                            title: "@T("ChequeClearing.Error")"
+
+
+
+                                        },
+                                        {
+                                            field: "Id",
+                                            headerTemplate: "",
+                                            title: "@T("Common.Edit")",
+                                            width: 100,
+                                            template: '<a class="btn btn-primary@(allowRead || allowUpdate ? "" : "none-display")" title="@T("Common.Details")" href="Edit/#=Id#"></span><i class="fa fa-pencil aria-hidden="true""></i></a>',
+                                            sortable: false
+                                        }
+
+                                    ]
+                                });
+                            });
+                    </script>
+
+                    <script type="text/javascript">
+                        var gridCheckboxHandler = new BaseEam.CheckBoxHandler('ChequeDeposit-grid');
+                        gridCheckboxHandler.init();
+
+
+                            @*$(document).ready(function () {
+                                //create
+                                $('#create').click(function (e) {
+                                    e.preventDefault();
+                                    addNewRecord('@(Url.Action("Create", "ChequeDeposit"))', '@Url.Action("Edit", "ChequeDeposit")');
+                                });
+                            });*@
+
+                        function toDate(date) {
+
+                            var date = new Date(parseInt(date.substr(6))).toLocaleString('en-US');
+                            date = date.split(",")
+                            var mydate = date[0]
+                            return mydate;
+                        }
+                        $(document).ready(function () {
+                            //search button
+
+                            $('#search').click(function () {
+                                //search
+                                var grid = $('#ChequeDeposit-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+
+                            $("div.panel-search").find(':input').keydown(function (event) {
+                                if (event.keyCode == 13) {
+                                    $("#search").click();
+                                    return false;
+                                }
+                            });
+
+                            //create
+                            @*$('#create').click(function(e) {
+                                e.preventDefault();
+                                addNewRecord('@(Url.Action("Create", "ChequeDeposit"))', '@Url.Action("Edit", "ChequeDeposit")');
+                            });*@
+
+                            //delete selected
+                            @*$('#delete-selected').click(function (e) {
+                                e.preventDefault();
+                                BaseEam.Grid.deleteSelectedRows(null, gridCheckboxHandler.selectedIds, "@Url.Action("DeleteSelected", "Item")", "items-grid", "", true);
+                                return false;
+                            });*@
+                        });
+                        function additionalData() {
+                            var data = {
+                                searchValues: $("div.panel-search").find(':input').serialize()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                         $('#Cheque-Import').click(function (e) {
+                        //    var selectedId =gridCheckboxHandler.selectedIds;
+
+                        //    var data = { "selectedId": selectedId }
+                        //    $.ajax({
+                        //        type: "post",
+                        //        url: "ChequeDepositSelected",
+                        //        data: JSON.stringify(data),
+                        //        dataType: "json",
+                        //        data: addAntiForgeryToken(),
+                        //        contentType: "application/json; charset=utf-8",
+                        //        success: function (data) {
+
+                        //        },
+
+                        //    });
+
+                             e.preventDefault();
+                             BaseEam.Grid.ImportFileRecord("@Url.Action("ImportData", "ChequeDeposit")", "ChequeDeposit-grid", "", true);
+                                return false;
+                            });
+                        $('#Cheque-selected').click(function (e) {
+                            var selectedId =gridCheckboxHandler.selectedIds;
+
+                            var data = { "selectedId": selectedId }
+                            $.ajax({
+                                type: "post",
+                                url: "ChequeDepositSelected",
+                                data: JSON.stringify(data),
+                                dataType: "json",
+                                data: addAntiForgeryToken(),
+                                contentType: "application/json; charset=utf-8",
+                                success: function (data) {
+
+                                },
+
+                            });
+                            e.preventDefault();
+                            BaseEam.Grid.ExportSelectedRows(null, gridCheckboxHandler.selectedIds, "@Url.Action("ChequeDepositSelected", "ChequeDeposit")", "ChequeDeposit-grid", "", true);
+                                return false;
+                            });
+                        //function ExportTest()
+                        //{
+
+                        //    var grid = $("#ChequeDeposit-grid").data("kendoGrid");
+                        //    var selected = [];
+                        //    grid.select().each(function () {
+
+                        //        selected.push(grid.dataItem(this));
+                        //    });
+                        //    //$("#ChequeDeposit-grid  tbody").find('tr').each(
+                        //    //    function ()
+                        //    //    {
+                        //    //        var grid = $("#ChequeDeposit-grid").data('kendoGrid');
+                        //    //        var id = $(this).find('#test').val();
+                        //    //        var IsAdd = $(this).hasClass('k-state-selected');
+                        //    //        if (IsAdd == true) {
+                        //    //             This item is selected
+                        //    //        }
+                        //    //    });
+                        //   // var allSelected= $("#ChequeDeposit-grid").data('kendoGrid');
+                        //   //// var allSelected = $("#ChequeDeposit-grid tr.test");
+                        //   // var allSelectedModels = [];
+                        //   // $.each(allSelected, function (e) {
+                        //   //     var row = $(this);
+                        //   //     var grid = row.closest(".k-grid").data("kendoGrid");
+                        //   //     var dataItem = grid.dataItem(row);
+
+                        //   //     allSelectedModels.push(dataItem);
+
+                        //   // });
+                        //}
+                            @*function markAsPrimaryExchangeRateCurrency(id) {
+                                $.when(kendo.ui.ExtOkCancelDialog.show({
+                                    title: "WARNING!",
+                                    message: '@T("Common.AreYouSure")',
+                                    icon: 'k-ext-warning'
+                                }))
+                                .done(function (response) {
+                                    if (response.button == "OK") {
+                                        var postData = {
+                                            id: id
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action())",
+                                            data: postData,
+                                            success: function (data) {
+                                                var grid = $("#ChequeDeposit-grid").data('kendoGrid');
+                                                grid.dataSource.read();
+                                            },
+                                            error: function (xhr, ajaxOptions, thrownError) {
+                                                showBSModal({ title: "Error", body: 'Failed to update currency' });
+                                            }
+                                        });
+                                    }
+                                });
+                            };
+                            function markAsPrimarySystemCurrency(id) {
+                                $.when(kendo.ui.ExtOkCancelDialog.show({
+                                    title: "WARNING!",
+                                    message: '@T("Common.AreYouSure")',
+                                    icon: 'k-ext-warning'
+                                }))
+                                .done(function (response) {
+                                    if (response.button == "OK") {
+                                        var postData = {
+                                            id: id
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action())",
+                                            data: postData,
+                                            success: function (data) {
+                                                var grid = $("#ChequeDeposit-grid").data('kendoGrid');
+                                                grid.dataSource.read();
+                                            },
+                                            error: function (xhr, ajaxOptions, thrownError) {
+                                                showBSModal({ title: "Error", body: 'Failed to update currency' });
+                                            }
+                                        });
+                                    }
+                                });
+                            };*@
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #search {
+        float: right;
+    }
+</style>

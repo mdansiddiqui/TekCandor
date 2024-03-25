@@ -1,0 +1,142 @@
+﻿@using NohaFMS.Services.Security
+@model ChequeDepositModel
+
+@{
+    //page title 
+    ViewBag.Title = T("ChequeClearing.EditItemDetails").Text;
+    var permissionService = EngineContext.Current.Resolve<NohaFMS.Services.IPermissionService>();
+    var allowCreate = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Create);
+    var allowRead = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Read);
+    var allowUpdate = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Update);
+    var allowDelete = permissionService.Authorize(StandardPermissionName.Monitoring_ChequeDeposit_Delete);
+}
+
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+@using (Html.BeginForm("Edit", "ChequeDeposit", FormMethod.Post, new { id = "ChequeDeposit-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            <small><i class="fa fa-arrow-circle-left fa-padding"></i>@Html.ActionLink(T("Common.BackToList").Text, "List")</small>
+        </h1>
+    </div>
+    <div id="validation-summary" class="validation-summary-errors" style="display:none">
+
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+    <script src="~/Content/chosen_v1.8.7/chosen.jquery.min.js"></script>
+
+<link href="~/Content/chosen_v1.8.7/chosen.min.css" rel="stylesheet" />
+<script type="text/javascript">
+        
+                    $(document).ready(function ()
+                    {
+                        $('#chequeDate').datepicker({
+                            dateFormat: "dd/mm/yy",
+                            showStatus: true,
+                            showWeeks: true,
+                            currentText: 'Now',
+                            autoSize: true,
+                            gotoCurrent: true,
+                            showAnim: 'blind',
+                            highlightWeek: true
+                            
+                        });
+                    });
+        $(document).ready(function ()
+        {
+
+            $("#Returnreasone").chosen({ width: "100%" });
+
+        });
+
+        function changeImage() {
+            var img = document.getElementById("image");
+            img.src = "Content/images/sample-signature-card.jpg";
+            return false;
+        }
+        function imageZoom(imgID, resultID) {
+            var img, lens, result, cx, cy;
+            img = document.getElementById(imgID);
+            result = document.getElementById(resultID);
+            /* Create lens: */
+            lens = document.createElement("DIV");
+            lens.setAttribute("class", "img-zoom-lens");
+            /* Insert lens: */
+            img.parentElement.insertBefore(lens, img);
+            /* Calculate the ratio between result DIV and lens: */
+            cx = result.offsetWidth / lens.offsetWidth;
+            cy = result.offsetHeight / lens.offsetHeight;
+            /* Set background properties for the result DIV */
+            result.style.backgroundImage = "url('" + img.src + "')";
+            result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+            /* Execute a function when someone moves the cursor over the image, or the lens: */
+            lens.addEventListener("mousemove", moveLens);
+            img.addEventListener("mousemove", moveLens);
+            /* And also for touch screens: */
+            lens.addEventListener("touchmove", moveLens);
+            img.addEventListener("touchmove", moveLens);
+            function moveLens(e) {
+                var pos, x, y;
+                /* Prevent any other actions that may occur when moving over the image */
+                e.preventDefault();
+                /* Get the cursor's x and y positions: */
+                pos = getCursorPos(e);
+                /* Calculate the position of the lens: */
+                x = pos.x - (lens.offsetWidth / 2);
+                y = pos.y - (lens.offsetHeight / 2);
+                /* Prevent the lens from being positioned outside the image: */
+                if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
+                if (x < 0) { x = 0; }
+                if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
+                if (y < 0) { y = 0; }
+                /* Set the position of the lens: */
+                lens.style.left = x + "px";
+                lens.style.top = y + "px";
+                /* Display what the lens "sees": */
+                result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+            }
+            function getCursorPos(e) {
+                var a, x = 0, y = 0;
+                e = e || window.event;
+                /* Get the x and y positions of the image: */
+                a = img.getBoundingClientRect();
+                /* Calculate the cursor's x and y coordinates, relative to the image: */
+                x = e.pageX - a.left;
+                y = e.pageY - a.top;
+                /* Consider any page scrolling: */
+                x = x - window.pageXOffset;
+                y = y - window.pageYOffset;
+                return { x: x, y: y };
+            }
+        }
+
+
+        $(document).ready(function () {
+            $("#save").click(function (e) {
+                e.preventDefault();
+                saveForm('ChequeDeposit-form', '@(Url.Action("Edit", "ChequeDeposit"))', toggleTabs);
+            });
+            $("#post").click(function (e) {
+                e.preventDefault();
+                saveForm('ChequeDeposit-form', '@(Url.Action("Post", "ChequeDeposit"))', toggleTabs);
+            });
+
+            $("#cancel").click(function (e) {
+                e.preventDefault();
+                $('#form').removeClass('dirty');
+                BaseEam.Grid.deleteRow(null, @Model.Id, "@Url.Action("Cancel", "ChequeDeposit")", "",  "@Url.Action("List", "ChequeDeposit")", false);
+            });
+
+            $("#ChequeDeposit-delete").click(function (e) {
+                e.preventDefault();
+                BaseEam.Grid.deleteRow(null, @Model.Id, "@Url.Action("Delete", "ChequeDeposit")", "", "@Url.Action("List", "ChequeDeposit")", true);
+            });
+        });
+    imageZoom("myimage", "myresult");
+
+</script>
+}

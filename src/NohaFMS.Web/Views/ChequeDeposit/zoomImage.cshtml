@@ -1,0 +1,356 @@
+﻿@model ChequeDepositModel
+@{
+    //Layout = null;
+    ViewBag.Title = "zoomImage";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .img-zoom-container {
+        position: relative;
+    }
+
+    .img-zoom-lens {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        /*set the size of the lens:*/
+        width: 100px;
+        height: 80px;
+    }
+
+    .img-zoom-result {
+        border: 1px solid #d4d4d4;
+        /*set the size of the result div:*/
+        width: 300px;
+        height:300px;
+    }
+
+    .flip-box {
+        background-color: transparent;
+        width: 300px;
+        height: 200px;
+        border: 1px solid #f1f1f1;
+        perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    }
+
+    /* This container is needed to position the front and back side */
+    .flip-box-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    /* Do an horizontal flip when you move the mouse over the flip box container */
+    .flip-box:hover .flip-box-inner {
+        transform: rotateY(180deg);
+    }
+
+    /* Position the front and back side */
+    .flip-box-front, .flip-box-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+    }
+
+    /* Style the front side (fallback if image is missing) */
+    .flip-box-front {
+        background-color: #bbb;
+        color: black;
+    }
+
+    /* Style the back side */
+    .flip-box-back {
+        background-color: dodgerblue;
+        color: white;
+        transform: rotateY(180deg);
+    }
+</style>
+@using (Html.BeginForm("Edit", "ChequeDeposit", FormMethod.Post, new { id = "ChequeDeposit-form" }))
+{
+    <div class="panel-group">
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+
+
+
+            </div>
+            <div class="panel-body">
+                <div class="row">
+
+
+                    <div class="img-zoom-container">
+                        <div class="form-group">
+                            <div class="col-sm-12" style="margin-left:15px">
+                                <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Signature Image</h5>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+
+
+                                    <img id="myimage2" style="width:95%; height:300px;border:5px solid" src="@Url.Content("~/Content/images/sample-signature-card.jpg")" />
+
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div id="myresult2" class="img-zoom-result" style="width:98% ;height:300px"></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Front Image</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+
+
+
+
+                                    @if (Model.imgF != null)
+                                    {
+
+                                        // var base64 = Convert.ToBase64String(Model.imgF);
+                                        // var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                        var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgF);
+                                    <img id="myimage" src="@imgSrc" style="width:95% ;height:300px ;border:5px solid" alt="Image">
+                                    }
+
+
+
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <div id="myresult" class="img-zoom-result" style="width:98% ; height:300px ;border:5px solid "></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12" style="margin-left:15px">
+                                <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Ultraviolet Image</h5>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+
+                                    @if (Model.imgU != null)
+                                    {
+
+                                        //var base64 = Convert.ToBase64String(Model.imgU);
+                                        //var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                        var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgU);
+
+                                        <img alt="image" id="myimage3" src="@imgSrc" style="width:95%; height:300px;border:5px solid" />}
+
+
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div id="myresult3" class="img-zoom-result" style="width:98% ;height:300px ;border:5px solid "></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Rear Image</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+
+
+
+
+                                    @if (Model.imgF != null)
+                                    {
+
+                                        // var base64 = Convert.ToBase64String(Model.imgF);
+                                        // var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                        var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgR);
+                                    <img id="myimage4" src="@imgSrc" style="width:95% ;height:300px ;border:5px solid" alt="Image">
+                                    }
+
+
+
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <div id="myresult4" class="img-zoom-result" style="width:98% ;height:300px;border:5px solid"></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            <div class="col-md-12">
+                                <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Front Image</h5>
+                            </div>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:20px">
+
+                            @if (Model.imgF != null)
+                            {
+
+                                // var base64 = Convert.ToBase64String(Model.imgF);
+                                // var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgF);
+
+                                <img alt="image" class="img-container" src="@imgSrc" style="width:1000px; height:500px;border:5px solid" />}
+
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <h5 class="pull-left text-bold k-underline" style="margin-left:20px">UV Image</h5>
+                            </div>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:20px">
+
+                            @if (Model.imgU != null)
+                            {
+
+                                //var base64 = Convert.ToBase64String(Model.imgU);
+                                //var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgU);
+
+                                <img alt="image" class="img-container" src="@imgSrc" style="width:1000px; height:500px;border:5px solid" />}
+
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="col-md-12">
+                                    <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Rear Image</h5>
+                                </div>
+
+                                <div class="col-sm-3" style="margin-left:20px">
+
+                                    @if (Model.imgR != null)
+                                    {
+
+                                        // var base64 = Convert.ToBase64String(Model.imgR);
+                                        // var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                        var imgSrc = String.Format("/Content/Cheques/{0}.jpg", Model.imgR);
+
+                                        <img alt="image" class="img-container" src="@imgSrc" style="width:500px; height:500px;border:5px solid" />}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="col-md-12">
+                                    <h5 class="pull-left text-bold k-underline" style="margin-left:20px">Signature Image</h5>
+                                </div>
+
+                                <img class="img-container" style="width:500px; height:500px;border:5px solid" src="@Url.Content("~/Content/images/sample-signature-card.jpg")" />
+
+                            </div>
+                        </div>*@
+
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <script type="text/javascript">
+
+                                        function imageZoom(imgID, resultID) {
+                                        var img, lens, result, cx, cy;
+                                        img = document.getElementById(imgID);
+                                        result = document.getElementById(resultID);
+                                        /* Create lens: */
+                                        lens = document.createElement("DIV");
+                                        lens.setAttribute("class", "img-zoom-lens");
+                                        /* Insert lens: */
+                                        img.parentElement.insertBefore(lens, img);
+                                        /* Calculate the ratio between result DIV and lens: */
+                                        cx = result.offsetWidth / lens.offsetWidth;
+                                        cy = result.offsetHeight / lens.offsetHeight;
+                                        /* Set background properties for the result DIV */
+                                        result.style.backgroundImage = "url('" + img.src + "')";
+                                        result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+                                        /* Execute a function when someone moves the cursor over the image, or the lens: */
+                                        lens.addEventListener("mousemove", moveLens);
+                                        img.addEventListener("mousemove", moveLens);
+                                        /* And also for touch screens: */
+                                        lens.addEventListener("touchmove", moveLens);
+                                        img.addEventListener("touchmove", moveLens);
+                                        function moveLens(e) {
+                                        var pos, x, y;
+                                        /* Prevent any other actions that may occur when moving over the image */
+                                        e.preventDefault();
+                                        /* Get the cursor's x and y positions: */
+                                        pos = getCursorPos(e);
+                                        /* Calculate the position of the lens: */
+                                        x = pos.x - (lens.offsetWidth / 2);
+                                        y = pos.y - (lens.offsetHeight / 2);
+                                        /* Prevent the lens from being positioned outside the image: */
+                                        if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
+                                        if (x < 0) { x = 0; }
+                                        if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
+                                        if (y < 0) { y = 0; }
+                                        /* Set the position of the lens: */
+                                        lens.style.left = x + "px";
+                                        lens.style.top = y + "px";
+                                        /* Display what the lens "sees": */
+                                        result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+                                        }
+                                        function getCursorPos(e) {
+                                        var a, x = 0, y = 0;
+                                        e = e || window.event;
+                                        /* Get the x and y positions of the image: */
+                                        a = img.getBoundingClientRect();
+                                        /* Calculate the cursor's x and y coordinates, relative to the image: */
+                                        x = e.pageX - a.left;
+                                        y = e.pageY - a.top;
+                                        /* Consider any page scrolling: */
+                                        x = x - window.pageXOffset;
+                                        y = y - window.pageYOffset;
+                                        return { x: x, y: y };
+                                        }
+                                        }
+
+
+
+
+                                        </script>
+                                        <script>
+                                            // Initiate zoom effect:
+                                            imageZoom("myimage", "myresult");
+
+                                        </script>
+                                        <script>
+                                            // Initiate zoom effect:
+                                            imageZoom("myimage2", "myresult2");
+                                            imageZoom("myimage3", "myresult3");
+                                            imageZoom("myimage4", "myresult4");
+
+                                        </script>
+                                    }

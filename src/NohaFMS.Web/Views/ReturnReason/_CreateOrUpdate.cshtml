@@ -1,0 +1,203 @@
+﻿@model ReturnReasonModel
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.IsNew)
+
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="attribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Attribute.Info"), true)
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+            </div>
+        </div>
+    </div>
+</div>
+
+@{ //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "attribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock } }
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <div class="col-md-3">
+                                @Html.BaseEamLabelFor(model => model.NumericReturnCodes, required: true)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.BaseEamEditorFor(model => model.NumericReturnCodes)
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.BaseEamLabelFor(model => model.AlphaReturnCodes, required: true)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.BaseEamEditorFor(model => model.AlphaReturnCodes)
+                            </div>
+
+                            @*<div class="col-md-3">
+                                @Html.BaseEamLabelFor(model => model.NumericReturnCodes, required: true)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.BaseEamEditorFor(model => model.NumericReturnCodes)
+                            </div>*@
+
+                            <div class="col-md-3">
+                                @Html.BaseEamLabelFor(model => model.Name, required: true)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.BaseEamEditorFor(model => model.Name)
+                            </div>
+
+
+
+                            @*<div class="col-md-3">
+            @Html.BaseEamLabelFor(model => model.DescriptionWithReturnCodes, required: true)
+        </div>
+        <div class="col-md-9">
+            @Html.BaseEamEditorFor(model => model.DescriptionWithReturnCodes)
+        </div>*@
+
+
+                            <div class="col-md-3">
+                                @Html.BaseEamLabelFor(model => model.Status, required: true)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.BaseEamEditorFor(model => model.Status)
+                            </div>
+
+
+                        </div>
+                        
+                      </div>
+                           
+                        
+                </div>
+                <hr />
+                @if (Model.Id > 0 && Model.IsNew == false)
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.BaseEamLabelFor(model => model.FirstCreatedBy)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.BaseEamDisplayFor(model => model.FirstCreatedBy)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.BaseEamLabelFor(model => model.LastUpdatedBy)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.BaseEamDisplayFor(model => model.LastUpdatedBy)
+                                </div>
+                            </div>
+                        </div>
+                    </div>          }
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    var inputArray = [];
+    function validateEmail(email) {
+
+        var re = /\S+\S+\.\S+/;
+        return re.test(email);
+    }
+    (function ($) {
+        $.fn.multipleInput = function () {
+            return this.each(function () {
+                debugger
+                // list of email addresses as unordered list
+                $list = $('<ul/>');
+                // input
+                var $input = $('<input type="email" id="email_search" class="email_search form-control multiemail"/>').keyup(function (event) {
+                    if (event.which == 13 || event.which == 32 || event.which == 188) {
+                        if (event.which == 188) {
+                            var val = $(this).val().slice(0, -1);
+                        }
+                        else {
+                            var val = $(this).val();
+                        }
+                        if (validateEmail(val)) {
+                            // append to list of emails with remove button
+                            $list.append($('<li><input  class="multipleInput-email " value="'+ val + '"  > </input></li>')
+                                .append($('<a href="#" class="multipleInput-close" title="Remove"><i class="glyphicon glyphicon-remove-sign"></i></a>')
+                                    .click(function (e) {
+                                        debugger
+                                        $(this).parent().remove();
+
+                                        var id = document.getElementsByClassName("multipleInput-email");
+                                        inputArray = [];
+                                        for (const val of id) {
+                                            inputArray.push(val.value);
+                                        }
+
+                                      var   Emaillist = inputArray.join();
+                                        //document.getElementById("screen").innerHTML = Emaillist;
+                                        document.getElementById("Email").value = Emaillist;
+                                        e.preventDefault();
+                                    })
+                                )
+
+                            );
+
+                            debugger
+                            var id = document.getElementsByClassName("multipleInput-email");
+                            inputArray = [];
+                            for (const val of id) {
+                                debugger
+                                inputArray.push(val.value);
+                            }
+
+                           var Emaillist = inputArray.join();
+                            //document.getElementById("screen").innerHTML = Emaillist;
+                            document.getElementById("Email").value = Emaillist;
+                            $(this).attr('placeholder', '');
+                            // empty input
+                            $(this).val('');
+                        }
+                        else {
+                            alert('Please enter valid email id, Thanks!');
+                        }
+                    }
+                });
+                // container div
+                var $container = $('<div class="multipleInput-container" />').click(function () {
+                    $input.focus();
+                });
+                // insert elements into DOM
+
+                $container.append($list).append($input).insertAfter($(this));
+                return $(this).hide();
+            });
+        };
+    })(jQuery);
+    $('#recipient_email').multipleInput();
+
+</script>
+<script>
+    var names = document.getElementById("Email");
+    var nameArr = names.split(',');
+    for (nameArr.length > 0) {
+        document.getElementById("screen") = nameArr;
+        "<br>"
+    }
+
+</script>
