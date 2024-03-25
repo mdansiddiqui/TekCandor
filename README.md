@@ -1,2 +1,2 @@
-# TEK-CONTROLLER
+# TEK-CONTROLLER (Digital Cheque Processing Platform)
 
